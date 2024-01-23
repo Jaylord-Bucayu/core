@@ -175,9 +175,6 @@ export async function editStudent(req:Request, res: Response) {
       auth.save();
     }
 
-    
-   
-
     res.send('Profiled updated successfully');
         
  
