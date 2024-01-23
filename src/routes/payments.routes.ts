@@ -1,6 +1,6 @@
 import { Application } from "express";
 
-import { getPaymentsList , getPaymentsById } from "../controllers/payments.controller";
+import { getPaymentsList , getPaymentsById, createPayment } from "../controllers/payments.controller";
 
 export function PaymentsRoute(app: Application) {
 
@@ -16,6 +16,14 @@ export function PaymentsRoute(app: Application) {
     **/
      app.get("/payments/:id",
      getPaymentsById
+     );
+
+
+     /**
+    * payments create
+    **/
+     app.post("/payments/create",
+     createPayment
      );
 
     

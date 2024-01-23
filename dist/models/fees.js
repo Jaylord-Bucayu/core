@@ -24,62 +24,26 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
-const userSchema = new mongoose_1.Schema({
-    firstname: {
-        type: String,
-        default: null,
+const feesSchema = new mongoose_1.Schema({
+    amount: {
+        type: Number,
+        default: 0
     },
-    middlename: {
-        type: String,
-        default: null,
-    },
-    lastname: {
-        type: String,
-        default: null,
-    },
-    gender: {
-        type: String,
-        default: null,
-    },
-    birthdate: {
-        type: Date,
-        default: null,
-    },
-    avatar: {
-        type: String,
-        default: null,
-    },
-    userTypes: [{
-            type: String,
-        }],
-    bio: {
-        type: String,
-        default: null,
-    },
-    section: {
+    particulars: {
         type: String,
     },
-    data: {
-        type: Map,
-        default: {}
-    },
-    parent: {
+    student: {
         type: Object,
         ref: 'User'
-    },
+    }
 }, { timestamps: true });
-userSchema.index({ sponsors: 1 });
-userSchema.index({ sponsorId: 1 });
-userSchema.virtual('id').get(function () {
+feesSchema.index({ sponsors: 1 });
+feesSchema.index({ sponsorId: 1 });
+feesSchema.virtual('id').get(function () {
     var _a;
     return (_a = this._id) === null || _a === void 0 ? void 0 : _a.toHexString();
 });
-userSchema.virtual('fullname').get(function () {
-    if (this.firstname)
-        return `${this.firstname} ${this.lastname}`;
-    return undefined;
-});
-userSchema.set('toJSON', {
+feesSchema.set('toJSON', {
     virtuals: true,
     transform: function (_, ret) {
         const newRet = { id: ret._id };
@@ -89,8 +53,8 @@ userSchema.set('toJSON', {
         return newRet;
     }
 });
-userSchema.post('save', async () => {
+feesSchema.post('save', async () => {
 });
-const UserModel = mongoose_1.default.model('User', userSchema);
-exports.default = UserModel;
-//# sourceMappingURL=user.js.map
+const FeesModel = mongoose_1.default.model('Fees', feesSchema);
+exports.default = FeesModel;
+//# sourceMappingURL=fees.js.map

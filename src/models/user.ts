@@ -9,7 +9,7 @@ interface IUser extends Document {
   gender?: Date | null;
   birthdate?: string | null;
   bio?: string | null;
-  socials?: Map<string, string | number | boolean | null>;
+  section?: string;
   data?: Map<string, string | number | boolean | null>;
   parent?: Map<string, string | number | boolean | null>;
   
@@ -48,16 +48,17 @@ const userSchema: Schema<IUser> = new Schema<IUser>(
       type: String,
       default: null,
     },
-    socials: {
-      type: Map,
+    section: {
+      type: String,
+    
     },
     data: {
       type: Map,
       default: {}
     },
     parent: {
-      type: Map,
-      default: {}
+      type: Object,
+      ref: 'User'
     },
 
   },
