@@ -166,8 +166,6 @@ export async function editStudent(req:Request, res: Response) {
     },
     }, { upsert: true });
 
-    // var userData = await User.findById(req.body.id);
-    // userData.save()
 
     var auth = await Auth.findById(req.body.id);
   
