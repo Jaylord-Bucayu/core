@@ -167,7 +167,7 @@ export async function editStudent(req:Request, res: Response) {
     }, { upsert: true });
 
 
-    var auth = await Auth.findById(req.body.id);
+    const auth = await Auth.findById(req.body.id);
   
     if(auth){
       auth.mobile = data.mobile || '';

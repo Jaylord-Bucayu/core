@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 interface IFee extends Document {
   amount?: number | null;
   particulars?: string | null;
-  student?: Object | string | number | boolean | null;
+  student?: string | null;
   
 }
 

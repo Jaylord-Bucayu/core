@@ -111,7 +111,7 @@ async function editStudent(req, res) {
     await user_1.default.findByIdAndUpdate(params.id, {
         $set: Object.assign({}, data),
     }, { upsert: true });
-    var auth = await auth_1.default.findById(req.body.id);
+    const auth = await auth_1.default.findById(req.body.id);
     if (auth) {
         auth.mobile = data.mobile || '';
         auth.email = data.email || '';
