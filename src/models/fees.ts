@@ -4,6 +4,8 @@ interface IFee extends Document {
   amount?: number | null;
   particulars?: string | null;
   student?: string | null;
+  dueDate?: string;
+  status?: string;
   
 }
 
@@ -17,6 +19,14 @@ const feesSchema: Schema<IFee> = new Schema<IFee>(
     particulars: {
         type: String,
       
+    },
+    status:{
+      type:String,
+      default:'pending'
+    },
+    dueDate:{
+      type:Date,
+
     },
     student: {
       type: Object,

@@ -77,10 +77,10 @@ async function createStudent(req, res) {
             lastname: data.lastname,
             birthdate: data.birthdate,
             gender: data.gender,
-            section: data.section
+            section: data.section,
+            studentId: data.studentId
         });
         await user.save();
-        console.log('hello');
         const parent_auth = new auth_1.default({
             email: data.parent.email,
             mobile: data.parent.mobile,

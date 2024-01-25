@@ -34,6 +34,10 @@ const paymentSchema = new mongoose_1.Schema({
         default: 'pending',
         enum: ['pending', 'paid', 'failed']
     },
+    fee: {
+        type: Object,
+        ref: 'Fee'
+    },
     student: {
         type: Object,
         ref: 'User'

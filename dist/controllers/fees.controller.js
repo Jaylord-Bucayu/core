@@ -13,7 +13,7 @@ async function getFeesList(req, res) {
 exports.getFeesList = getFeesList;
 async function getFeesById(req, res) {
     const params = req.params;
-    const fees = await fees_1.default.findById(params).populate('user').populate('parent');
+    const fees = await fees_1.default.findById(params.id);
     res.send(fees);
 }
 exports.getFeesById = getFeesById;

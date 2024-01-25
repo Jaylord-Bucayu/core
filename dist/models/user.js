@@ -41,6 +41,10 @@ const userSchema = new mongoose_1.Schema({
         type: String,
         default: null,
     },
+    studentId: {
+        type: String,
+        default: null,
+    },
     birthdate: {
         type: Date,
         default: null,

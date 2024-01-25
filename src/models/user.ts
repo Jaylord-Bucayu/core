@@ -10,6 +10,7 @@ interface IUser extends Document {
   birthdate?: string | null;
   bio?: string | null;
   section?: string;
+  studentId?:string | null;
   data?: Map<string, string | number | boolean | null>;
   parent?: Map<string, string | number | boolean | null>;
   
@@ -30,6 +31,10 @@ const userSchema: Schema<IUser> = new Schema<IUser>(
       default: null,
     },
     gender: {
+      type: String,
+      default: null,
+    },
+    studentId: {
       type: String,
       default: null,
     },

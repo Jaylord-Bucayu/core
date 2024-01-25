@@ -20,7 +20,7 @@ export async function getFeesById(req:Request, res: Response) {
 
    const params = req.params;
 
-   const fees = await Fees.findById(params).populate('user').populate('parent');
+   const fees = await Fees.findById(params.id)
      
    res.send(fees)
  
@@ -43,12 +43,13 @@ export async function getFeesById(req:Request, res: Response) {
 export async function getStudentFees(req:Request, res: Response) {
 
     const params = req.params;
- 
+  
     const fees = await Fees.find({student:params.id}).populate('student')
       
+
   // Calculate total amount
   const totalAmount: number = fees.reduce((total, fee) => {
-    const feeAmount: number = fee.amount || 0; // Use 0 if fee.amount is null or undefined
+  const feeAmount: number = fee.amount || 0; // Use 0 if fee.amount is null or undefined
     return total + feeAmount;
   }, 0);
 

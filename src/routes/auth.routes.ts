@@ -9,7 +9,7 @@ export function authRoutes(app: Application) {
      /**
     * sign user
     **/
-    app.get("/sign_in",
+    app.post("/login",
     signUserInWithEmailPassword
 );
 

@@ -5,6 +5,7 @@ interface IPayment extends Document {
   status?: string | null;
   student?: Map<string, string | number | boolean | null>;
   parent?: Map<string, string | number | boolean | null>;
+  fee?:Map<string, string | number | boolean | null>;
   
 }
 
@@ -18,6 +19,10 @@ const paymentSchema: Schema<IPayment> = new Schema<IPayment>(
       type: String,
       default: 'pending',
       enum:['pending','paid','failed']
+    },
+    fee:{
+      type: Object,
+      ref:'Fee'
     },
     student: {
       type: Object,

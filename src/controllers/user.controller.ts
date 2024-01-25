@@ -7,6 +7,10 @@ import User from '../models/user';
 import Auth from '../models/auth'
 import Fee from '../models/fees';
 
+
+//UTILS
+// import { generateStudentId } from '../utils/index'
+
 export async function getStudentsList(_:Request, res: Response) {
  //const data = req.body;
 
@@ -114,12 +118,13 @@ export async function createStudent(req:Request, res: Response) {
           lastname: data.lastname,
           birthdate:data.birthdate,
           gender:data.gender,
-          section:data.section
+          section:data.section,
+          studentId: data.studentId
       });
 
       await user.save();
 
-      console.log('hello')
+     
       //create parent
       const parent_auth = new Auth({
           email: data.parent.email,
@@ -200,12 +205,7 @@ export async function addStudentParticular(req:Request,res:Response) {
 
   await addedFee.save();
 
-
   res.send('fee added');
-
-
-
-  
 
 
 }

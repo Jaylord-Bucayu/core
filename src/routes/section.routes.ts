@@ -1,6 +1,6 @@
 import { Application } from "express";
 
-import { getSectionsList,createSection,getSection,editSection } from "../controllers/section.controller";
+import { getSectionsList,createSection,getSection,editSection,addSectionParticular } from "../controllers/section.controller";
 
 export function SectionRoute(app: Application) {
 
@@ -24,5 +24,6 @@ export function SectionRoute(app: Application) {
     createSection
     )
 
+    app.post('/sections/particular/create/:id',addSectionParticular)
 
 }

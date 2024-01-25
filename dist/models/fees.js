@@ -32,6 +32,13 @@ const feesSchema = new mongoose_1.Schema({
     particulars: {
         type: String,
     },
+    status: {
+        type: String,
+        default: 'pending'
+    },
+    dueDate: {
+        type: Date,
+    },
     student: {
         type: Object,
         ref: 'User'

@@ -7,13 +7,13 @@ exports.createPayment = exports.getPaymentsById = exports.getPaymentsList = void
 const payment_1 = __importDefault(require("../models/payment"));
 async function getPaymentsList(req, res) {
     const data = req.body;
-    const payment = await payment_1.default.find(data).populate('student').populate('parent');
+    const payment = await payment_1.default.find(data);
     res.send(payment);
 }
 exports.getPaymentsList = getPaymentsList;
 async function getPaymentsById(req, res) {
     const params = req.params;
-    const payment = await payment_1.default.findById(params).populate('user').populate('parent');
+    const payment = await payment_1.default.findById(params.id);
     res.send(payment);
 }
 exports.getPaymentsById = getPaymentsById;

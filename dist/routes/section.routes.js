@@ -7,6 +7,7 @@ function SectionRoute(app) {
     app.get("/sections/:id", section_controller_1.getSection);
     app.patch("/sections/:id", section_controller_1.editSection);
     app.post("/sections/create", section_controller_1.createSection);
+    app.post('/sections/particular/create/:id', section_controller_1.addSectionParticular);
 }
 exports.SectionRoute = SectionRoute;
 //# sourceMappingURL=section.routes.js.map
