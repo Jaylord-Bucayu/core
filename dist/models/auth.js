@@ -62,7 +62,7 @@ authSchema.virtual('id').get(function () {
 });
 authSchema.set('toJSON', {
     virtuals: true,
-    transform: function (_, ret) {
+    transform: function (_doc, ret) {
         const newRet = { id: ret._id };
         delete ret._id;
         delete ret.__v;
