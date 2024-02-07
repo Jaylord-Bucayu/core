@@ -18,7 +18,7 @@ async function signUserInWithEmailPassword(req, res) {
         data.username = data.username.toLowerCase();
     if (data.email != null)
         data.email = data.email.toLowerCase();
-    var auth = null;
+    let auth = null;
     if (data.email != null) {
         auth = await auth_1.default.findOne({ email: data.email }).select('+password');
     }
