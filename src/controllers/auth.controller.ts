@@ -19,7 +19,7 @@ if (!appKey) {
 
        if (data.email != null) data.email = data.email.toLowerCase();
         
-        var auth = null;
+        let auth = null;
 
         if (data.email != null) {
             // console.log('Finding email...');
