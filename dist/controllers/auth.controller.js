@@ -16,9 +16,8 @@ async function signUserInWithEmailPassword(req, res) {
     const data = req.body;
     if (!!data.username)
         data.username = data.username.toLowerCase();
-    if (data.email != null) {
+    if (data.email != null)
         data.email = data.email.toLowerCase();
-    }
     var auth = null;
     if (data.email != null) {
         auth = await auth_1.default.findOne({ email: data.email }).select('+password');
@@ -54,8 +53,13 @@ async function signUserInWithEmailPassword(req, res) {
     auth.lastActive = new Date();
     await auth.save();
     auth = auth.toJSON();
-    var user = await user_1.default.findByIdAndUpdate(auth.id, {}, { new: true, upsert: true });
-    res.send(user);
+    await user_1.default.findByIdAndUpdate(auth.id, {}, { new: true, upsert: true });
+    res.send({
+        'status': 'success',
+        'message': 'Login successfully',
+        'data': auth,
+        'token': token,
+    });
 }
 exports.signUserInWithEmailPassword = signUserInWithEmailPassword;
 //# sourceMappingURL=auth.controller.js.map

@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import Section from '../models/section';
 import User from '../models/user';
 import Fee from '../models/fees';
+import Mailer from '../config/mailer'
 
 export async function getSectionsList(req: Request, res: Response) {
 
@@ -70,8 +71,16 @@ export async function addSectionParticular(req: Request, res:Response){
         student: student.id, // Access the id property of each student
         });
   
+
     // Save the fee to the database or perform any other necessary operations
     await fee.save();
+   
+
+    // Send email for each student
+    await Mailer.sendMail('jaylord.bucayu@avyan.global', 'Fee Added', 'Your fee has been added.'); // Assuming you have access to student's email
+
+    // Wait for 30 seconds before sending the next email
+    await new Promise(resolve => setTimeout(resolve, 30000));
 
    }
 

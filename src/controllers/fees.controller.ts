@@ -43,7 +43,7 @@ export async function getFeesById(req:Request, res: Response) {
 export async function getStudentFees(req:Request, res: Response) {
 
     const params = req.params;
-  
+    
     const fees = await Fees.find({student:params.id}).populate('student')
       
 

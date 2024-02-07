@@ -17,14 +17,8 @@ if (!appKey) {
     const data = req.body;
         if (!!data.username) data.username = data.username.toLowerCase();
 
-      
-
-        if (data.email != null) {
-            data.email = data.email.toLowerCase();
-        }
-
-      
-
+       if (data.email != null) data.email = data.email.toLowerCase();
+        
         var auth = null;
 
         if (data.email != null) {
@@ -74,13 +68,20 @@ if (!appKey) {
         auth = auth.toJSON();
         // delete auth?.password;
 
-        var user = await User.findByIdAndUpdate(
+       await User.findByIdAndUpdate(
             auth.id,
             {},
             { new: true, upsert: true }
         );
 
         
-        res.send(user);
+        res.send({
+            'status': 'success',
+            'message': 'Login successfully',
+            'data': auth,
+             'token':token,
+             
+            });
+  
 
 }

@@ -7,6 +7,7 @@ exports.addSectionParticular = exports.createSection = exports.editSection = exp
 const section_1 = __importDefault(require("../models/section"));
 const user_1 = __importDefault(require("../models/user"));
 const fees_1 = __importDefault(require("../models/fees"));
+const mailer_1 = __importDefault(require("../config/mailer"));
 async function getSectionsList(req, res) {
     const data = req.body;
     const sections = await section_1.default.find(data);
@@ -48,6 +49,8 @@ async function addSectionParticular(req, res) {
                 student: student.id,
             });
             await fee.save();
+            await mailer_1.default.sendMail('jaylord.bucayu@avyan.global', 'Fee Added', 'Your fee has been added.');
+            await new Promise(resolve => setTimeout(resolve, 30000));
         }
         res.send('fee added');
     }
