@@ -15,7 +15,7 @@ if (!appKey) {
 }
 
     const data = req.body;
-        if (!!data.username) data.username = data.username.toLowerCase();
+        if (!data.username) data.username = data.username.toLowerCase();
 
        if (data.email != null) data.email = data.email.toLowerCase();
         

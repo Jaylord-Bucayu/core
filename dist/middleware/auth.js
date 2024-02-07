@@ -27,7 +27,6 @@ const middleware = async (req, res, next) => {
         }
         auth.lastActive = new Date();
         await auth.save();
-        req.auth = auth;
         next();
     }
     catch (err) {

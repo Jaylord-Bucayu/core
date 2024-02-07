@@ -14,7 +14,7 @@ async function signUserInWithEmailPassword(req, res) {
         throw new Error('APP_KEY environment variable is not defined');
     }
     const data = req.body;
-    if (!!data.username)
+    if (!data.username)
         data.username = data.username.toLowerCase();
     if (data.email != null)
         data.email = data.email.toLowerCase();

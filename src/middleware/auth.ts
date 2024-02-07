@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import Auth from '../models/auth';
+import Auth from '../models/auth'; // Adjust import based on your model location
 import { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 
@@ -7,7 +7,7 @@ dotenv.config();
 
 // Extend the Request type to include the 'auth' property
 interface CustomRequest extends Request {
-    auth?: any; // Adjust the type accordingly based on your Auth model
+    auth?: Map<string, string | number | boolean | null>; // Adjust the type accordingly based on your Auth model
 }
 
 const APP_KEY = process.env.APP_KEY || '';
@@ -35,7 +35,7 @@ const middleware = async (req: CustomRequest, res: Response, next: NextFunction)
         auth.lastActive = new Date();
         await auth.save();
 
-        req.auth = auth;
+        // req?.auth = auth;
 
         next();
     } catch (err) {
