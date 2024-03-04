@@ -25,6 +25,11 @@ UsersRoute(app);
 SectionRoute(app);
 FeesRoute(app);
 
+app.get('/ping', async(_:Request, res: Response) => {
+
+  res.send("Server Active");
+
+})
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });
