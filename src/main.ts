@@ -8,6 +8,7 @@ import { PaymentsRoute } from './routes/payments.routes'
 import { UsersRoute } from "./routes/user.routes";
 import { SectionRoute } from "./routes/section.routes";
 import { FeesRoute } from "./routes/fees.routes";
+import { Response, Request } from "express";
 
 
 import initializeMongoose from './config/mongoose';

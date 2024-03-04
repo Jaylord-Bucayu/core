@@ -22,6 +22,9 @@ app.use(body_parser_1.default.json());
 (0, user_routes_1.UsersRoute)(app);
 (0, section_routes_1.SectionRoute)(app);
 (0, fees_routes_1.FeesRoute)(app);
+app.get('/ping', async (_, res) => {
+    res.send("Server Active");
+});
 app.listen(port, () => {
     console.log(`Server is listening on port ${port}`);
 });
