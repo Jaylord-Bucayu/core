@@ -5,6 +5,49 @@ import Auth from '../models/auth';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
+
+function decodeJWT(token:string) {
+    const parts = token.split('.');
+    if(!token){
+        const decodedPayload = atob(parts[1]);
+        return JSON.parse(decodedPayload);
+    }
+    // if (parts.length !== 3) {
+    //     throw new Error('Invalid JWT format');
+    // }
+
+    const decodedPayload = atob(parts[1]);
+    return JSON.parse(decodedPayload);
+}
+
+
+export async function currentUser(req: Request, res: Response) {
+
+    let token:string = "";
+ // Get the authorization header
+ const authHeader = req.headers['authorization'];
+
+ // Check if the authorization header exists and contains a bearer token
+ if (authHeader && authHeader.startsWith('Bearer ')) {
+     // Extract the token
+     token = authHeader.substring(7); // Remove 'Bearer ' prefix
+ }
+   
+  const auth = decodeJWT(token);
+
+
+
+
+    var user = await User.findByIdAndUpdate(auth.auth, {}, { new: true, upsert: true });
+
+    res.send({
+        'status': 'success',
+        'message': 'Query success',
+        'data': {
+            ...user.toJSON(),
+        }
+    });
+}
 export async function signUserInWithEmailPassword(req: Request, res: Response) {
 
 
@@ -15,9 +58,15 @@ if (!appKey) {
 }
 
     const data = req.body;
-        if (!data.username) data.username = data.username.toLowerCase();
+    if (data.username !== undefined && data.username !== null) {
+        data.username = data.username.toLowerCase();
+    }
+    
 
-       if (data.email != null) data.email = data.email.toLowerCase();
+    if (data.email !== undefined && data.email !== null) {
+        data.email = data.email.toLowerCase();
+    }
+    
         
         let auth = null;
 

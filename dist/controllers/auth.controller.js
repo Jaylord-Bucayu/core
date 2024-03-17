@@ -3,21 +3,47 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signUserInWithEmailPassword = void 0;
+exports.signUserInWithEmailPassword = exports.currentUser = void 0;
 const user_1 = __importDefault(require("../models/user"));
 const auth_1 = __importDefault(require("../models/auth"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+function decodeJWT(token) {
+    const parts = token.split('.');
+    if (!token) {
+        const decodedPayload = atob(parts[1]);
+        return JSON.parse(decodedPayload);
+    }
+    const decodedPayload = atob(parts[1]);
+    return JSON.parse(decodedPayload);
+}
+async function currentUser(req, res) {
+    let token = "";
+    const authHeader = req.headers['authorization'];
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        token = authHeader.substring(7);
+    }
+    const auth = decodeJWT(token);
+    var user = await user_1.default.findByIdAndUpdate(auth.auth, {}, { new: true, upsert: true });
+    res.send({
+        'status': 'success',
+        'message': 'Query success',
+        'data': Object.assign({}, user.toJSON())
+    });
+}
+exports.currentUser = currentUser;
 async function signUserInWithEmailPassword(req, res) {
     const appKey = process.env.APP_KEY;
     if (!appKey) {
         throw new Error('APP_KEY environment variable is not defined');
     }
     const data = req.body;
-    if (!data.username)
+    if (data.username !== undefined && data.username !== null) {
         data.username = data.username.toLowerCase();
-    if (data.email != null)
+    }
+    if (data.email !== undefined && data.email !== null) {
         data.email = data.email.toLowerCase();
+    }
     let auth = null;
     if (data.email != null) {
         auth = await auth_1.default.findOne({ email: data.email }).select('+password');
