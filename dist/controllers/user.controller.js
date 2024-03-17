@@ -8,6 +8,7 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const user_1 = __importDefault(require("../models/user"));
 const auth_1 = __importDefault(require("../models/auth"));
 const fees_1 = __importDefault(require("../models/fees"));
+const index_1 = require("../utils/index");
 async function getStudentsList(_, res) {
     const users = await auth_1.default.find({ 'role': 'student' }).populate('user');
     res.send(users);
@@ -27,7 +28,7 @@ async function createUser(req, res) {
             username: data.username,
             mobile: data.mobile,
             role: 'student',
-            password: bcrypt_1.default.hashSync(data.password, 10),
+            password: bcrypt_1.default.hashSync((0, index_1.formatDate)(data.password), 10),
         });
         await auth.save();
         const user = new user_1.default({
@@ -37,7 +38,6 @@ async function createUser(req, res) {
             lastname: data.lastname
         });
         await user.save();
-        console.log('hello');
         const parent_auth = new auth_1.default({
             email: data.parent.email,
             mobile: data.parent.mobile,
@@ -52,7 +52,7 @@ async function createUser(req, res) {
             lastname: data.parent.lastname
         });
         await parent_user.save();
-        return res.send('user created');
+        res.send('user created');
     }
     catch (error) {
         return res.send(error);
@@ -67,7 +67,7 @@ async function createStudent(req, res) {
             username: data.username,
             mobile: data.mobile,
             role: 'student',
-            password: bcrypt_1.default.hashSync(data.birthdate, 10),
+            password: bcrypt_1.default.hashSync((0, index_1.formatDate)(data.birthdate), 10),
         });
         await auth.save();
         const user = new user_1.default({
@@ -97,7 +97,8 @@ async function createStudent(req, res) {
         await parent_user.save();
         user.parent = parent_auth.id;
         await user.save();
-        return res.send('user created');
+        console.log("sad");
+        res.send('user created');
     }
     catch (error) {
         return res.send(error);

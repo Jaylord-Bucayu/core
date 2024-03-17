@@ -9,7 +9,7 @@ import Fee from '../models/fees';
 
 
 //UTILS
-// import { generateStudentId } from '../utils/index'
+ import { formatDate } from '../utils/index'
 
 export async function getStudentsList(_:Request, res: Response) {
  //const data = req.body;
@@ -46,7 +46,7 @@ export async function createUser(req:Request, res: Response) {
             username: data.username,
             mobile: data.mobile,
             role: 'student',
-            password: bcrypt.hashSync(data.password, 10),
+            password: bcrypt.hashSync(formatDate(data.password), 10),
         });
 
         await auth.save();
@@ -60,7 +60,7 @@ export async function createUser(req:Request, res: Response) {
 
         await user.save();
 
-        console.log('hello')
+    
         //create parent
         const parent_auth = new Auth({
             email: data.parent.email,
@@ -80,10 +80,7 @@ export async function createUser(req:Request, res: Response) {
 
         await parent_user.save();
 
-
-
-
-        return res.send('user created')
+         res.send('user created')
 
 
     } catch (error) {
@@ -94,6 +91,8 @@ export async function createUser(req:Request, res: Response) {
 
 
 }
+
+
 
 export async function createStudent(req:Request, res: Response) {
   const data = req.body;
@@ -106,8 +105,10 @@ export async function createStudent(req:Request, res: Response) {
           username: data.username,
           mobile: data.mobile,
           role: 'student',
-          password: bcrypt.hashSync(data.birthdate, 10),
+          password: bcrypt.hashSync(formatDate(data.birthdate), 10),
       });
+ 
+
 
       await auth.save();
 
@@ -146,8 +147,8 @@ export async function createStudent(req:Request, res: Response) {
 
       user.parent = parent_auth.id;
       await user.save();
-
-      return res.send('user created')
+console.log("sad")
+       res.send('user created')
 
 
   } catch (error) {

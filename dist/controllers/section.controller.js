@@ -37,11 +37,12 @@ async function createSection(req, res) {
 }
 exports.createSection = createSection;
 async function addSectionParticular(req, res) {
+    var _a;
     const params = req.params;
     const body = req.body;
     const section = await section_1.default.findById(params.id);
     if (section) {
-        const students = await user_1.default.find({ section: section.section_name });
+        const students = await user_1.default.find({ section: section.section_name }).populate('parent');
         for (const student of students) {
             const fee = new fees_1.default({
                 amount: body.amount,
@@ -49,8 +50,7 @@ async function addSectionParticular(req, res) {
                 student: student.id,
             });
             await fee.save();
-            await mailer_1.default.sendMail('jaylord.bucayu@avyan.global', 'Fee Added', 'Your fee has been added.');
-            await new Promise(resolve => setTimeout(resolve, 30000));
+            await mailer_1.default.sendMail((_a = student === null || student === void 0 ? void 0 : student.parent) === null || _a === void 0 ? void 0 : _a.email, 'Fee Added', `Your fee for ${body.particulars} wiith a amount of ${body.amount} has been added.`);
         }
         res.send('fee added');
     }

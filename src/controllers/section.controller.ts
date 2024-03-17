@@ -61,7 +61,7 @@ export async function addSectionParticular(req: Request, res:Response){
 
 
    if(section){
-    const students = await User.find({section:section.section_name});
+    const students = await User.find({section:section.section_name}).populate('parent');
 
     // Assuming students is an array of User objects
     for (const student of students) {
@@ -77,10 +77,11 @@ export async function addSectionParticular(req: Request, res:Response){
    
 
     // Send email for each student
-    await Mailer.sendMail('jaylord.bucayu@avyan.global', 'Fee Added', 'Your fee has been added.'); // Assuming you have access to student's email
+    //@ts-ignore
+    await Mailer.sendMail(student?.parent?.email, 'Fee Added', `Your fee for ${body.particulars} wiith a amount of ${body.amount} has been added.`); // Assuming you have access to student's email
 
     // Wait for 30 seconds before sending the next email
-    await new Promise(resolve => setTimeout(resolve, 30000));
+    //await new Promise(resolve => setTimeout(resolve, 30000));
 
    }
 
