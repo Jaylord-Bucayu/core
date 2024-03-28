@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Query from '../models/query';
 
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export async function createQuery(req:Request, res: Response) {
 
   const body = req.body
@@ -13,7 +14,7 @@ export async function createQuery(req:Request, res: Response) {
 
 }
 
-
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export async function getQueryList(req:Request, res: Response){
 
   const body = req.body;
@@ -24,7 +25,7 @@ export async function getQueryList(req:Request, res: Response){
 
 }
 
-
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export async function getQuery(req:Request, res: Response){
 
   const params = req.params;
@@ -34,7 +35,7 @@ export async function getQuery(req:Request, res: Response){
   res.send(query);
 
 }
-
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export async function editQuery(req:Request, res: Response){
 
   const params = req.params;

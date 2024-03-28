@@ -5,6 +5,7 @@ import User from '../models/user';
 import Fee from '../models/fees';
 import Mailer from '../config/mailer'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export async function getSectionsList(req: Request, res: Response) {
 
     const data = req.body;
@@ -33,7 +34,7 @@ export async function editSection(req: Request, res: Response) {
             ...data
         },
         }, { upsert: true });
-   
+
     res.send(sections)
 
 }
@@ -70,14 +71,15 @@ export async function addSectionParticular(req: Request, res:Response){
         particulars: body.particulars,
         student: student.id, // Access the id property of each student
         });
-  
+
 
     // Save the fee to the database or perform any other necessary operations
     await fee.save();
-   
+
 
     // Send email for each student
-    //@ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-expect-error
     await Mailer.sendMail(student?.parent?.email, 'Fee Added', `Your fee for ${body.particulars} wiith a amount of ${body.amount} has been added.`); // Assuming you have access to student's email
 
     // Wait for 30 seconds before sending the next email

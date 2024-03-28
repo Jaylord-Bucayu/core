@@ -2,6 +2,7 @@ import { Application } from "express";
 
 import { getSectionsList,createSection,getSection,editSection,addSectionParticular } from "../controllers/section.controller";
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function SectionRoute(app: Application) {
 
      /**
