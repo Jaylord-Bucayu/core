@@ -12,7 +12,7 @@ interface CustomRequest extends Request {
 
 const APP_KEY = process.env.APP_KEY || '';
 
-const middleware = async (req: CustomRequest, res: Response, next: NextFunction) => {
+const middleware  = async (req: CustomRequest, res: Response, next: NextFunction) => {
     try {
         let token;
         if (req.cookies.jwt) {

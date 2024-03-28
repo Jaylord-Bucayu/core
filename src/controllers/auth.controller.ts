@@ -6,48 +6,60 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 
-function decodeJWT(token:string) {
-    const parts = token.split('.');
-    if(!token){
-        const decodedPayload = atob(parts[1]);
-        return JSON.parse(decodedPayload);
-    }
-    // if (parts.length !== 3) {
-    //     throw new Error('Invalid JWT format');
-    // }
+function decodeJWT(token: string) {
+  if (!token) {
+      throw new Error('Token is missing');
+  }
 
-    const decodedPayload = atob(parts[1]);
-    return JSON.parse(decodedPayload);
+  const parts = token.split('.');
+  if (parts.length !== 3) {
+      throw new Error('Invalid JWT format');
+  }
+
+  try {
+      const decodedPayload = atob(parts[1]);
+      return JSON.parse(decodedPayload);
+  } catch (error) {
+      throw new Error('Error decoding JWT');
+  }
 }
-
 
 export async function currentUser(req: Request, res: Response) {
+  try {
+      let token: string | undefined;
 
-    let token:string = "";
- // Get the authorization header
- const authHeader = req.headers['authorization'];
+      // Get the authorization header
+      const authHeader = req.headers['authorization'];
 
- // Check if the authorization header exists and contains a bearer token
- if (authHeader && authHeader.startsWith('Bearer ')) {
-     // Extract the token
-     token = authHeader.substring(7); // Remove 'Bearer ' prefix
- }
-   
-  const auth = decodeJWT(token);
+      // Check if the authorization header exists and contains a bearer token
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+          // Extract the token
+          token = authHeader.substring(7); // Remove 'Bearer ' prefix
+      }
 
+      if (typeof token === 'string') {
+          const auth = decodeJWT(token);
 
+          const user = await User.findByIdAndUpdate(auth.auth, {}, { new: true, upsert: true });
 
-
-    var user = await User.findByIdAndUpdate(auth.auth, {}, { new: true, upsert: true });
-
-    res.send({
-        'status': 'success',
-        'message': 'Query success',
-        'data': {
-            ...user.toJSON(),
-        }
-    });
+          res.send({
+              'status': 'success',
+              'message': 'Query success',
+              'data': {
+                  ...user.toJSON(),
+              }
+          });
+      } else {
+          throw new Error('Token is missing');
+      }
+  } catch (error) {
+      res.status(400).send({
+          'status': 'error',
+          'message': error.message,
+      });
+  }
 }
+
 export async function signUserInWithEmailPassword(req: Request, res: Response) {
 
 
@@ -61,13 +73,13 @@ if (!appKey) {
     if (data.username !== undefined && data.username !== null) {
         data.username = data.username.toLowerCase();
     }
-    
+
 
     if (data.email !== undefined && data.email !== null) {
         data.email = data.email.toLowerCase();
     }
-    
-        
+
+
         let auth = null;
 
         if (data.email != null) {
@@ -123,14 +135,14 @@ if (!appKey) {
             { new: true, upsert: true }
         );
 
-        
+
         res.send({
             'status': 'success',
             'message': 'Login successfully',
             'data': auth,
              'token':token,
-             
+
             });
-  
+
 
 }

@@ -24,23 +24,23 @@ const userSchema: Schema<IUser> = new Schema<IUser>(
     },
     firstname: {
       type: String,
-      default: null,
+      default: "",
     },
     middlename: {
       type: String,
-      default: null,
+      default: "",
     },
     lastname: {
       type: String,
-      default: null,
+      default: "",
     },
     gender: {
       type: String,
-      default: null,
+      default: "",
     },
     studentId: {
       type: String,
-      default: null,
+      default: "",
     },
     birthdate: {
       type: Date,
@@ -59,7 +59,7 @@ const userSchema: Schema<IUser> = new Schema<IUser>(
     },
     section: {
       type: String,
-    
+
     },
     data: {
       type: Map,

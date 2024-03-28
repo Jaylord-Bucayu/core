@@ -14,10 +14,10 @@ import Fee from '../models/fees';
 export async function getStudentsList(_:Request, res: Response) {
  //const data = req.body;
 
- 
+
  const users = await Auth.find({ 'role': 'student' }).populate('user')
-res.send(users) 
-   
+res.send(users)
+
 
 }
 
@@ -28,7 +28,7 @@ export async function getStudentById(req:Request, res: Response) {
 
   const user = await Auth.findById(params.id).populate('user');
   res.send(user)
- 
+
  }
 
 
@@ -37,7 +37,7 @@ export async function getStudentById(req:Request, res: Response) {
 
 export async function createUser(req:Request, res: Response) {
     const data = req.body;
- 
+
     try {
 
       //create student
@@ -60,7 +60,7 @@ export async function createUser(req:Request, res: Response) {
 
         await user.save();
 
-    
+
         //create parent
         const parent_auth = new Auth({
             email: data.parent.email,
@@ -86,7 +86,7 @@ export async function createUser(req:Request, res: Response) {
     } catch (error) {
 
         return res.send(error);
-        
+
     }
 
 
@@ -107,7 +107,7 @@ export async function createStudent(req:Request, res: Response) {
           role: 'student',
           password: bcrypt.hashSync(formatDate(data.birthdate), 10),
       });
- 
+
 
 
       await auth.save();
@@ -125,7 +125,7 @@ export async function createStudent(req:Request, res: Response) {
 
       await user.save();
 
-     
+
       //create parent
       const parent_auth = new Auth({
           email: data.parent.email,
@@ -154,7 +154,7 @@ console.log("sad")
   } catch (error) {
 
       return res.send(error);
-      
+
   }
 
 
@@ -165,7 +165,7 @@ export async function editStudent(req:Request, res: Response) {
   const params = req.params;
 
   console.log({data,params})
-  
+
    await User.findByIdAndUpdate(params.id, {
     $set: {
         ...data
@@ -174,7 +174,7 @@ export async function editStudent(req:Request, res: Response) {
 
 
     const auth = await Auth.findById(req.body.id);
-  
+
     if(auth){
       auth.mobile = data.mobile || '';
       auth.email = data.email || '';
@@ -182,8 +182,8 @@ export async function editStudent(req:Request, res: Response) {
     }
 
     res.send('Profiled updated successfully');
-        
- 
+
+
  }
 
 export async function getUsersList(_:Request, res: Response) {
@@ -227,20 +227,32 @@ export async function addStudentParticular(req:Request,res:Response) {
        "title": "German"
      }
    ]
- 
+
      res.send(data)
- 
+
  }
 
  export async function getParentById(_:Request, res: Response) {
 
-    const data = 
+    const data =
      {
        "id": 1,
        "title": "Spanish"
      }
-     
- 
+
+
      res.send(data)
- 
+
+ }
+
+ export async function deleteStudent(req:Request, res: Response){
+
+  const params = req.params
+
+   await Auth.findByIdAndDelete(params.id);
+   await User.findByIdAndDelete(params.id);
+
+
+   res.send({message:"Deleted User"})
+
  }

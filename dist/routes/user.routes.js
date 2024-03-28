@@ -10,6 +10,7 @@ function UsersRoute(app) {
     app.get("/students", user_controller_1.getStudentsList);
     app.get("/students/:id", user_controller_1.getStudentById);
     app.patch("/students/:id", user_controller_1.editStudent);
+    app.delete("/students/:id", user_controller_1.deleteStudent);
     app.get("/students/fees/:id", fees_controller_1.getStudentFees);
     app.post('/students/particulars/create/:id', user_controller_1.addStudentParticular);
 }

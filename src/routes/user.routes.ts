@@ -1,6 +1,6 @@
 import { Application } from "express";
 
-import { editStudent,getStudentsList , getStudentById, getUsersList,createStudent, addStudentParticular } from "../controllers/user.controller";
+import { editStudent,getStudentsList , getStudentById, getUsersList,createStudent, addStudentParticular ,deleteStudent} from "../controllers/user.controller";
 import { getStudentFees } from '../controllers/fees.controller';
 
 export function UsersRoute(app: Application) {
@@ -35,6 +35,8 @@ export function UsersRoute(app: Application) {
 
       app.patch("/students/:id",editStudent)
 
+      app.delete("/students/:id",deleteStudent)
+
       app.get("/students/fees/:id",  getStudentFees)
 
 
@@ -42,5 +44,5 @@ export function UsersRoute(app: Application) {
 
 
 
-    
+
 }

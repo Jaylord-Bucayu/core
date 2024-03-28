@@ -11,6 +11,7 @@ const payments_routes_1 = require("./routes/payments.routes");
 const user_routes_1 = require("./routes/user.routes");
 const section_routes_1 = require("./routes/section.routes");
 const fees_routes_1 = require("./routes/fees.routes");
+const query_routes_1 = require("./routes/query.routes");
 const mongoose_1 = __importDefault(require("./config/mongoose"));
 const app = (0, express_1.default)();
 const port = 5000;
@@ -22,6 +23,7 @@ app.use(body_parser_1.default.json());
 (0, user_routes_1.UsersRoute)(app);
 (0, section_routes_1.SectionRoute)(app);
 (0, fees_routes_1.FeesRoute)(app);
+(0, query_routes_1.queryRoutes)(app);
 app.get('/ping', async (_, res) => {
     res.send("Server Active");
 });

@@ -9,27 +9,47 @@ const auth_1 = __importDefault(require("../models/auth"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 function decodeJWT(token) {
-    const parts = token.split('.');
     if (!token) {
+        throw new Error('Token is missing');
+    }
+    const parts = token.split('.');
+    if (parts.length !== 3) {
+        throw new Error('Invalid JWT format');
+    }
+    try {
         const decodedPayload = atob(parts[1]);
         return JSON.parse(decodedPayload);
     }
-    const decodedPayload = atob(parts[1]);
-    return JSON.parse(decodedPayload);
+    catch (error) {
+        throw new Error('Error decoding JWT');
+    }
 }
 async function currentUser(req, res) {
-    let token = "";
-    const authHeader = req.headers['authorization'];
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-        token = authHeader.substring(7);
+    try {
+        let token;
+        const authHeader = req.headers['authorization'];
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+            token = authHeader.substring(7);
+        }
+        if (typeof token === 'string') {
+            const auth = decodeJWT(token);
+            const user = await user_1.default.findByIdAndUpdate(auth.auth, {}, { new: true, upsert: true });
+            res.send({
+                'status': 'success',
+                'message': 'Query success',
+                'data': Object.assign({}, user.toJSON())
+            });
+        }
+        else {
+            throw new Error('Token is missing');
+        }
     }
-    const auth = decodeJWT(token);
-    var user = await user_1.default.findByIdAndUpdate(auth.auth, {}, { new: true, upsert: true });
-    res.send({
-        'status': 'success',
-        'message': 'Query success',
-        'data': Object.assign({}, user.toJSON())
-    });
+    catch (error) {
+        res.status(400).send({
+            'status': 'error',
+            'message': error.message,
+        });
+    }
 }
 exports.currentUser = currentUser;
 async function signUserInWithEmailPassword(req, res) {

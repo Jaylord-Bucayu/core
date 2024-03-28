@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getParentById = exports.getParentsList = exports.addStudentParticular = exports.getUsersList = exports.editStudent = exports.createStudent = exports.createUser = exports.getStudentById = exports.getStudentsList = void 0;
+exports.deleteStudent = exports.getParentById = exports.getParentsList = exports.addStudentParticular = exports.getUsersList = exports.editStudent = exports.createStudent = exports.createUser = exports.getStudentById = exports.getStudentsList = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const user_1 = __importDefault(require("../models/user"));
 const auth_1 = __importDefault(require("../models/auth"));
@@ -161,4 +161,11 @@ async function getParentById(_, res) {
     res.send(data);
 }
 exports.getParentById = getParentById;
+async function deleteStudent(req, res) {
+    const params = req.params;
+    await auth_1.default.findByIdAndDelete(params.id);
+    await user_1.default.findByIdAndDelete(params.id);
+    res.send({ message: "Deleted User" });
+}
+exports.deleteStudent = deleteStudent;
 //# sourceMappingURL=user.controller.js.map
