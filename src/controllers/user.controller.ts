@@ -100,34 +100,6 @@ export async function createStudent(req:Request, res: Response) {
 
   try {
 
-    //create student
-      const auth = new Auth({
-          email: data.email,
-          username: data.username,
-          mobile: data.mobile,
-          role: 'student',
-          password: bcrypt.hashSync(formatDate(data.birthdate), 10),
-      });
-
-
-
-      await auth.save();
-
-      const user = new User({
-          _id: auth.id,
-          firstname: data.firstname,
-          middlename: data.middlename,
-          lastname: data.lastname,
-          birthdate:data.birthdate,
-          gender:data.gender,
-          section:data.section,
-          studentId: data.studentId
-      });
-
-      await user.save();
-
-       Mailer.sendMail(data.email,'Portal Account credentials', `To check your fees login to the https://client-weld-eight.vercel.app Your password is ${formatDate(data.birthdate)} `); // Assuming you have access to student's email
-
 
       //create parent
       const parent_auth = new Auth({
@@ -151,8 +123,38 @@ export async function createStudent(req:Request, res: Response) {
 
       await parent_user.save();
 
-      user.parent = parent_auth.id;
-      await user.save();
+      //create student
+      const auth = new Auth({
+        email: data.email,
+        username: data.username,
+        mobile: data.mobile,
+        role: 'student',
+        password: bcrypt.hashSync(formatDate(data.birthdate), 10),
+    });
+
+
+
+    await auth.save();
+
+    const user = new User({
+        _id: auth.id,
+        firstname: data.firstname,
+        middlename: data.middlename,
+        lastname: data.lastname,
+        birthdate:data.birthdate,
+        gender:data.gender,
+        section:data.section,
+        studentId: data.studentId,
+        parent:parent_auth.id
+    });
+
+
+    await user.save();
+
+     Mailer.sendMail(data.email,'Portal Account credentials', `To check your fees login to the https://client-weld-eight.vercel.app Your password is ${formatDate(data.birthdate)} `); // Assuming you have access to student's email
+
+
+
 
       Mailer.sendMail(data.parent.email,'Portal Account credentials', `To check your children fees login to the https://client-weld-eight.vercel.app Your password is ${data.parent.email} `); // Assuming you have access to student's email
 

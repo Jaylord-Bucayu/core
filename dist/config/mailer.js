@@ -25,6 +25,7 @@ class Mailer {
             if (err) {
                 console.log(err);
                 console.log('Error Occurs');
+                throw new Error(err.message);
             }
             else {
                 console.log(`Email sent successfully`);

@@ -8,6 +8,7 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const user_1 = __importDefault(require("../models/user"));
 const auth_1 = __importDefault(require("../models/auth"));
 const fees_1 = __importDefault(require("../models/fees"));
+const mailer_1 = __importDefault(require("../config/mailer"));
 const index_1 = require("../utils/index");
 async function getStudentsList(_, res) {
     const users = await auth_1.default.find({ 'role': 'student' }).populate('user');
@@ -62,6 +63,20 @@ exports.createUser = createUser;
 async function createStudent(req, res) {
     const data = req.body;
     try {
+        const parent_auth = new auth_1.default({
+            email: data.parent.email,
+            mobile: data.parent.mobile,
+            role: 'parent',
+            password: bcrypt_1.default.hashSync(data.parent.email, 10),
+        });
+        await parent_auth.save();
+        const parent_user = new user_1.default({
+            _id: parent_auth.id,
+            firstname: data.parent.firstname,
+            middlename: data.parent.middlename,
+            lastname: data.parent.lastname
+        });
+        await parent_user.save();
         const auth = new auth_1.default({
             email: data.email,
             username: data.username,
@@ -78,30 +93,17 @@ async function createStudent(req, res) {
             birthdate: data.birthdate,
             gender: data.gender,
             section: data.section,
-            studentId: data.studentId
+            studentId: data.studentId,
+            parent: parent_auth.id
         });
         await user.save();
-        const parent_auth = new auth_1.default({
-            email: data.parent.email,
-            mobile: data.parent.mobile,
-            role: 'parent',
-            password: bcrypt_1.default.hashSync(data.parent.email, 10),
-        });
-        await parent_auth.save();
-        const parent_user = new user_1.default({
-            _id: parent_auth.id,
-            firstname: data.parent.firstname,
-            middlename: data.parent.middlename,
-            lastname: data.parent.lastname
-        });
-        await parent_user.save();
-        user.parent = parent_auth.id;
-        await user.save();
-        console.log("sad");
+        mailer_1.default.sendMail(data.email, 'Portal Account credentials', `To check your fees login to the https://client-weld-eight.vercel.app Your password is ${(0, index_1.formatDate)(data.birthdate)} `);
+        mailer_1.default.sendMail(data.parent.email, 'Portal Account credentials', `To check your children fees login to the https://client-weld-eight.vercel.app Your password is ${data.parent.email} `);
         res.send('user created');
     }
     catch (error) {
-        return res.send(error);
+        console.log(error);
+        return res.status(500).send(error);
     }
 }
 exports.createStudent = createStudent;
