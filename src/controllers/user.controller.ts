@@ -6,6 +6,7 @@ import bcrypt from 'bcrypt';
 import User from '../models/user';
 import Auth from '../models/auth'
 import Fee from '../models/fees';
+import Mailer from '../config/mailer'
 
 
 //UTILS
@@ -125,6 +126,8 @@ export async function createStudent(req:Request, res: Response) {
 
       await user.save();
 
+       Mailer.sendMail(data.email,'Portal Account credentials', `To check your fees login to the https://client-weld-eight.vercel.app Your password is ${formatDate(data.birthdate)} `); // Assuming you have access to student's email
+
 
       //create parent
       const parent_auth = new Auth({
@@ -135,6 +138,9 @@ export async function createStudent(req:Request, res: Response) {
       });
 
       await parent_auth.save();
+
+       Mailer.sendMail(data.parent.email,'Portal Account credentials', `To check your children fees login to the https://client-weld-eight.vercel.app Your password is ${data.parent.email} `); // Assuming you have access to student's email
+
 
       const parent_user = new User({
           _id: parent_auth.id,
@@ -147,7 +153,7 @@ export async function createStudent(req:Request, res: Response) {
 
       user.parent = parent_auth.id;
       await user.save();
-console.log("sad")
+
        res.send('user created')
 
 
