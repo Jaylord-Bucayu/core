@@ -139,7 +139,7 @@ export async function createStudent(req:Request, res: Response) {
 
       await parent_auth.save();
 
-       Mailer.sendMail(data.parent.email,'Portal Account credentials', `To check your children fees login to the https://client-weld-eight.vercel.app Your password is ${data.parent.email} `); // Assuming you have access to student's email
+
 
 
       const parent_user = new User({
@@ -154,12 +154,14 @@ export async function createStudent(req:Request, res: Response) {
       user.parent = parent_auth.id;
       await user.save();
 
+      Mailer.sendMail(data.parent.email,'Portal Account credentials', `To check your children fees login to the https://client-weld-eight.vercel.app Your password is ${data.parent.email} `); // Assuming you have access to student's email
+
        res.send('user created')
 
 
   } catch (error) {
-
-      return res.send(error);
+     console.log(error)
+      return res.status(500).send(error);
 
   }
 
