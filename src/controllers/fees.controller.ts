@@ -64,3 +64,26 @@ export async function getStudentFees(req:Request, res: Response) {
 
 
   }
+
+
+  export async function deleteFee(req:Request, res: Response){
+
+    const params = req.params;
+    const body = req.body;
+
+    await Fees.findByIdAndDelete(params.id,body);
+
+    res.send({message:"deleted"});
+  }
+
+
+  export async function editFee(req:Request, res: Response){
+
+    const params = req.params;
+    const body = req.body;
+
+    const query = await Fees.findByIdAndUpdate(params.id,body);
+
+    res.send(query);
+
+  }

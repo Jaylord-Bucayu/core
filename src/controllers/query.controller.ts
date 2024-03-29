@@ -7,6 +7,8 @@ export async function createQuery(req:Request, res: Response) {
 
   const body = req.body
 
+  console.log({body})
+
   const new_query = new Query(body);
   await new_query.save();
 
@@ -22,6 +24,22 @@ export async function getQueryList(req:Request, res: Response){
   const query = await Query.find(body);
 
   res.send(query);
+
+}
+
+export async function getQueryParent(req:Request, res: Response) {
+
+  try {
+    const params = req.params;
+
+  const query = await Query.find({transaction:params?.id});
+
+  res.send(query);
+
+  } catch (error) {
+     console.log(error.message)
+     res.send(error)
+    }
 
 }
 
@@ -46,4 +64,17 @@ export async function editQuery(req:Request, res: Response){
   res.send(query);
 
 }
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export async function deleteQuery(req:Request, res: Response){
+
+  const params = req.params;
+  const body = req.body;
+
+  await Query.findByIdAndDelete(params.id,body);
+
+  res.send({message:"deleted"});
+
+}
+
 

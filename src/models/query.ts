@@ -29,7 +29,7 @@ const querySchema: Schema<IPayment> = new Schema<IPayment>(
     },
     transaction: {
       type: String,
-      default: '',
+      default: 'User',
     }
 
   },

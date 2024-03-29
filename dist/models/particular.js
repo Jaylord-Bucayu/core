@@ -39,10 +39,6 @@ const feesSchema = new mongoose_1.Schema({
     dueDate: {
         type: Date,
     },
-    student: {
-        type: mongoose_1.default.Types.ObjectId,
-        ref: 'User'
-    },
     section: {
         type: mongoose_1.default.Types.ObjectId,
         ref: 'Section'
@@ -66,6 +62,6 @@ feesSchema.set('toJSON', {
 });
 feesSchema.post('save', async () => {
 });
-const FeesModel = mongoose_1.default.model('Fees', feesSchema);
-exports.default = FeesModel;
-//# sourceMappingURL=fees.js.map
+const ParticularModel = mongoose_1.default.model('Particular', feesSchema);
+exports.default = ParticularModel;
+//# sourceMappingURL=particular.js.map

@@ -3,7 +3,6 @@ import mongoose, { Schema, Document } from 'mongoose';
 interface IFee extends Document {
   amount?: number | null;
   particulars?: string | null;
-  student?: string | null;
   dueDate?: string;
   status?: string;
   section?:string | null;
@@ -27,11 +26,6 @@ const feesSchema: Schema<IFee> = new Schema<IFee>(
     },
     dueDate:{
       type:Date,
-
-    },
-    student: {
-      type: mongoose.Types.ObjectId,
-      ref:'User'
 
     },
 
@@ -69,6 +63,6 @@ feesSchema.post('save', async () => {
   // Your post-save logic here
 });
 
-const FeesModel = mongoose.model<IFee>('Fees', feesSchema);
+const ParticularModel = mongoose.model<IFee>('Particular', feesSchema);
 
-export default FeesModel;
+export default ParticularModel;

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStudentFees = exports.createFee = exports.getFeesById = exports.getFeesList = void 0;
+exports.editFee = exports.deleteFee = exports.getStudentFees = exports.createFee = exports.getFeesById = exports.getFeesList = void 0;
 const fees_1 = __importDefault(require("../models/fees"));
 async function getFeesList(req, res) {
     const data = req.body;
@@ -35,4 +35,18 @@ async function getStudentFees(req, res) {
     res.send(feesWithTotal);
 }
 exports.getStudentFees = getStudentFees;
+async function deleteFee(req, res) {
+    const params = req.params;
+    const body = req.body;
+    await fees_1.default.findByIdAndDelete(params.id, body);
+    res.send({ message: "deleted" });
+}
+exports.deleteFee = deleteFee;
+async function editFee(req, res) {
+    const params = req.params;
+    const body = req.body;
+    const query = await fees_1.default.findByIdAndUpdate(params.id, body);
+    res.send(query);
+}
+exports.editFee = editFee;
 //# sourceMappingURL=fees.controller.js.map

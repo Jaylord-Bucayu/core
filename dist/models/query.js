@@ -44,7 +44,7 @@ const querySchema = new mongoose_1.Schema({
     },
     transaction: {
         type: String,
-        default: '',
+        default: 'User',
     }
 }, { timestamps: true });
 querySchema.index({ sponsors: 1 });

@@ -1,6 +1,6 @@
 import { Application } from "express";
 
-import { getSectionsList,createSection,getSection,editSection,addSectionParticular } from "../controllers/section.controller";
+import { getSectionsList,createSection,getSection,editSection,addSectionParticular,getParticularList } from "../controllers/section.controller";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function SectionRoute(app: Application) {
@@ -26,5 +26,8 @@ export function SectionRoute(app: Application) {
     )
 
     app.post('/sections/particular/create/:id',addSectionParticular)
+
+
+    app.get('/particulars',getParticularList)
 
 }

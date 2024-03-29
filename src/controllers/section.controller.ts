@@ -3,7 +3,9 @@ import { Request, Response } from "express";
 import Section from '../models/section';
 import User from '../models/user';
 import Fee from '../models/fees';
-import Mailer from '../config/mailer'
+import Particular from "../models/particular";
+
+// import Mailer from '../config/mailer'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export async function getSectionsList(req: Request, res: Response) {
@@ -53,6 +55,18 @@ export async function createSection(req: Request, res: Response) {
 
 }
 
+export async function getParticularList(req: Request, res: Response) {
+
+  const data = req.body;
+
+  const particular = await Particular.find(data).populate('section');
+
+  res.send(particular);
+
+}
+
+
+
 export async function addSectionParticular(req: Request, res:Response){
 
     const params = req.params
@@ -62,6 +76,19 @@ export async function addSectionParticular(req: Request, res:Response){
 
 
    if(section){
+
+    const particular = new Particular({
+      amount: body.amount,
+      particulars: body.particulars,
+      section:section.id,
+      dueDate:body.dueDate
+      });
+
+
+  // Save the fee to the database or perform any other necessary operations
+  await particular.save();
+
+
     const students = await User.find({section:section.section_name}).populate('parent');
 
     // Assuming students is an array of User objects
@@ -70,6 +97,8 @@ export async function addSectionParticular(req: Request, res:Response){
         amount: body.amount,
         particulars: body.particulars,
         student: student.id, // Access the id property of each student
+        section:section.id,
+        dueDate:body.dueDate
         });
 
 
@@ -79,13 +108,16 @@ export async function addSectionParticular(req: Request, res:Response){
 
     // Send email for each student
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-expect-error
-    await Mailer.sendMail(student?.parent?.email, 'Fee Added', `Your fee for ${body.particulars} wiith a amount of ${body.amount} has been added.`); // Assuming you have access to student's email
+
+
+    //Mailer.sendMail(student?.parent?.email, 'Fee Added', `Your fee for ${body.particulars} with a amount of ${body.amount} has been added.`); // Assuming you have access to student's email
 
     // Wait for 30 seconds before sending the next email
     //await new Promise(resolve => setTimeout(resolve, 30000));
 
    }
+
+
 
    res.send('fee added')
 
