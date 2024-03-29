@@ -183,7 +183,7 @@ async function deleteStudent(req, res) {
     res.send({ message: "Deleted User" });
 }
 exports.deleteStudent = deleteStudent;
-async function dashboard(req, res) {
+async function dashboard(_, res) {
     const students = await user_1.default.find({});
     const sections = await section_1.default.find({});
     const fees = await fees_1.default.find({ status: "pending" });

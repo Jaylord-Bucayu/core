@@ -284,7 +284,7 @@ export async function addStudentParticular(req:Request,res:Response) {
  }
 
 
- export async function dashboard(req:Request, res: Response){
+ export async function dashboard(_:Request, res: Response){
 
   interface StudentsPerSection {
     [section: string]: number;
