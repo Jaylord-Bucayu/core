@@ -6,8 +6,10 @@ import bcrypt from 'bcrypt';
 import User from '../models/user';
 import Auth from '../models/auth'
 import Fee from '../models/fees';
+import Section from '../models/section';
 import Mailer from '../config/mailer'
 
+import mongoose from 'mongoose';
 
 //UTILS
  import { formatDate } from '../utils/index'
@@ -27,8 +29,22 @@ export async function getStudentById(req:Request, res: Response) {
 
  const params = req.params
 
-  const user = await Auth.findById(params.id).populate('user');
-  res.send(user)
+ const user = await Auth.findById(params.id).populate({
+  path: 'user',
+  populate: {
+      path: 'parent' // Populate the 'parent' field within the 'user' document
+  }
+});
+
+const parent_user = await User.findById(params.id);
+const parent = await Auth.findById(parent_user?.parent).populate('user')
+
+const data = {
+  parent,
+  user
+}
+
+  res.send(data)
 
  }
 
@@ -145,7 +161,7 @@ export async function createStudent(req:Request, res: Response) {
         gender:data.gender,
         section:data.section,
         studentId: data.studentId,
-        parent:parent_auth.id
+        parent: new mongoose.Types.ObjectId(parent_auth.id)
     });
 
 
@@ -264,5 +280,48 @@ export async function addStudentParticular(req:Request,res:Response) {
 
 
    res.send({message:"Deleted User"})
+
+ }
+
+
+ export async function dashboard(req:Request, res: Response){
+
+  interface StudentsPerSection {
+    [section: string]: number;
+}
+
+
+  const students = await User.find({}); // Get all students
+  const sections = await Section.find({}); // Get all sections
+  const fees = await Fee.find({ status: "pending" }); // Get pending fees
+
+  // Count the number of students per section
+  const studentsPerSection: StudentsPerSection = {}; // Define the type
+
+students.forEach(student => {
+    const section = student.section;
+    if (section) {
+        if (section in studentsPerSection) {
+            studentsPerSection[section]++;
+        } else {
+            studentsPerSection[section] = 1;
+        }
+    }
+});
+
+const studentsPerSectionArray = Object.keys(studentsPerSection).map(section => ({
+  section,
+  students: studentsPerSection[section]
+}));
+
+const data = {
+    total_students: students.length,
+    total_sections: sections.length,
+    total_fees: fees.length,
+    students_per_section: studentsPerSectionArray
+};
+
+  res.send(data);
+
 
  }

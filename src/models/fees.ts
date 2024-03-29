@@ -6,7 +6,7 @@ interface IFee extends Document {
   student?: string | null;
   dueDate?: string;
   status?: string;
-  
+
 }
 
 const feesSchema: Schema<IFee> = new Schema<IFee>(
@@ -18,7 +18,7 @@ const feesSchema: Schema<IFee> = new Schema<IFee>(
 
     particulars: {
         type: String,
-      
+
     },
     status:{
       type:String,
@@ -29,9 +29,9 @@ const feesSchema: Schema<IFee> = new Schema<IFee>(
 
     },
     student: {
-      type: Object,
+      type: mongoose.Types.ObjectId,
       ref:'User'
-     
+
     }
 
   },

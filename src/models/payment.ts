@@ -6,7 +6,7 @@ interface IPayment extends Document {
   student?: Map<string, string | number | boolean | null>;
   parent?: Map<string, string | number | boolean | null>;
   fee?:Map<string, string | number | boolean | null>;
-  
+
 }
 
 const paymentSchema: Schema<IPayment> = new Schema<IPayment>(
@@ -21,16 +21,16 @@ const paymentSchema: Schema<IPayment> = new Schema<IPayment>(
       enum:['pending','paid','failed']
     },
     fee:{
-      type: Object,
+      type: mongoose.Types.ObjectId,
       ref:'Fee'
     },
     student: {
-      type: Object,
+      type: mongoose.Types.ObjectId,
       ref:'User'
-     
+
     },
     parent: {
-        type: Object,
+      type: mongoose.Types.ObjectId,
         ref:'User'
     },
 

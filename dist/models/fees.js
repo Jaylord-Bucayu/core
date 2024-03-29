@@ -40,7 +40,7 @@ const feesSchema = new mongoose_1.Schema({
         type: Date,
     },
     student: {
-        type: Object,
+        type: mongoose_1.default.Types.ObjectId,
         ref: 'User'
     }
 }, { timestamps: true });

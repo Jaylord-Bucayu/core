@@ -72,7 +72,7 @@ const userSchema = new mongoose_1.Schema({
         default: {}
     },
     parent: {
-        type: Object,
+        type: mongoose_1.default.Types.ObjectId,
         ref: 'User'
     },
 }, { timestamps: true });

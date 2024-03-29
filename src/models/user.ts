@@ -66,7 +66,7 @@ const userSchema: Schema<IUser> = new Schema<IUser>(
       default: {}
     },
     parent: {
-      type: Object,
+      type: mongoose.Types.ObjectId,
       ref: 'User'
     },
 

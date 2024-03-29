@@ -7,6 +7,7 @@ interface IStudentFeeWithTotal {
     totalAmount?: number | undefined;
   }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export async function getFeesList(req:Request, res: Response) {
 
   const data = req.body;
@@ -21,9 +22,9 @@ export async function getFeesById(req:Request, res: Response) {
    const params = req.params;
 
    const fees = await Fees.findById(params.id)
-     
+
    res.send(fees)
- 
+
  }
 
 
@@ -34,7 +35,7 @@ export async function getFeesById(req:Request, res: Response) {
   const fees = new Fees(data);
 
   await fees.save();
-    
+
   res.send(fees)
 
 }
@@ -43,9 +44,9 @@ export async function getFeesById(req:Request, res: Response) {
 export async function getStudentFees(req:Request, res: Response) {
 
     const params = req.params;
-    
+
     const fees = await Fees.find({student:params.id}).populate('student')
-      
+
 
   // Calculate total amount
   const totalAmount: number = fees.reduce((total, fee) => {
@@ -61,5 +62,5 @@ export async function getStudentFees(req:Request, res: Response) {
 
   res.send(feesWithTotal);
 
-  
+
   }

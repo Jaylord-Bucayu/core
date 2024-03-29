@@ -35,15 +35,15 @@ const paymentSchema = new mongoose_1.Schema({
         enum: ['pending', 'paid', 'failed']
     },
     fee: {
-        type: Object,
+        type: mongoose_1.default.Types.ObjectId,
         ref: 'Fee'
     },
     student: {
-        type: Object,
+        type: mongoose_1.default.Types.ObjectId,
         ref: 'User'
     },
     parent: {
-        type: Object,
+        type: mongoose_1.default.Types.ObjectId,
         ref: 'User'
     },
 }, { timestamps: true });

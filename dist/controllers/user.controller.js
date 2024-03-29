@@ -3,12 +3,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteStudent = exports.getParentById = exports.getParentsList = exports.addStudentParticular = exports.getUsersList = exports.editStudent = exports.createStudent = exports.createUser = exports.getStudentById = exports.getStudentsList = void 0;
+exports.dashboard = exports.deleteStudent = exports.getParentById = exports.getParentsList = exports.addStudentParticular = exports.getUsersList = exports.editStudent = exports.createStudent = exports.createUser = exports.getStudentById = exports.getStudentsList = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const user_1 = __importDefault(require("../models/user"));
 const auth_1 = __importDefault(require("../models/auth"));
 const fees_1 = __importDefault(require("../models/fees"));
+const section_1 = __importDefault(require("../models/section"));
 const mailer_1 = __importDefault(require("../config/mailer"));
+const mongoose_1 = __importDefault(require("mongoose"));
 const index_1 = require("../utils/index");
 async function getStudentsList(_, res) {
     const users = await auth_1.default.find({ 'role': 'student' }).populate('user');
@@ -17,8 +19,19 @@ async function getStudentsList(_, res) {
 exports.getStudentsList = getStudentsList;
 async function getStudentById(req, res) {
     const params = req.params;
-    const user = await auth_1.default.findById(params.id).populate('user');
-    res.send(user);
+    const user = await auth_1.default.findById(params.id).populate({
+        path: 'user',
+        populate: {
+            path: 'parent'
+        }
+    });
+    const parent_user = await user_1.default.findById(params.id);
+    const parent = await auth_1.default.findById(parent_user === null || parent_user === void 0 ? void 0 : parent_user.parent).populate('user');
+    const data = {
+        parent,
+        user
+    };
+    res.send(data);
 }
 exports.getStudentById = getStudentById;
 async function createUser(req, res) {
@@ -94,7 +107,7 @@ async function createStudent(req, res) {
             gender: data.gender,
             section: data.section,
             studentId: data.studentId,
-            parent: parent_auth.id
+            parent: new mongoose_1.default.Types.ObjectId(parent_auth.id)
         });
         await user.save();
         mailer_1.default.sendMail(data.email, 'Portal Account credentials', `To check your fees login to the https://client-weld-eight.vercel.app Your password is ${(0, index_1.formatDate)(data.birthdate)} `);
@@ -170,4 +183,33 @@ async function deleteStudent(req, res) {
     res.send({ message: "Deleted User" });
 }
 exports.deleteStudent = deleteStudent;
+async function dashboard(req, res) {
+    const students = await user_1.default.find({});
+    const sections = await section_1.default.find({});
+    const fees = await fees_1.default.find({ status: "pending" });
+    const studentsPerSection = {};
+    students.forEach(student => {
+        const section = student.section;
+        if (section) {
+            if (section in studentsPerSection) {
+                studentsPerSection[section]++;
+            }
+            else {
+                studentsPerSection[section] = 1;
+            }
+        }
+    });
+    const studentsPerSectionArray = Object.keys(studentsPerSection).map(section => ({
+        section,
+        students: studentsPerSection[section]
+    }));
+    const data = {
+        total_students: students.length,
+        total_sections: sections.length,
+        total_fees: fees.length,
+        students_per_section: studentsPerSectionArray
+    };
+    res.send(data);
+}
+exports.dashboard = dashboard;
 //# sourceMappingURL=user.controller.js.map

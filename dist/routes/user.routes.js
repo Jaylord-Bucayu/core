@@ -13,6 +13,7 @@ function UsersRoute(app) {
     app.delete("/students/:id", user_controller_1.deleteStudent);
     app.get("/students/fees/:id", fees_controller_1.getStudentFees);
     app.post('/students/particulars/create/:id', user_controller_1.addStudentParticular);
+    app.get('/dashboard', user_controller_1.dashboard);
 }
 exports.UsersRoute = UsersRoute;
 //# sourceMappingURL=user.routes.js.map
