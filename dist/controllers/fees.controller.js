@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.editFee = exports.deleteFee = exports.getStudentFees = exports.createFee = exports.getFeesById = exports.getFeesList = void 0;
+exports.editFee = exports.deleteFee = exports.getStudentFees = exports.createFee = exports.getFeesById = exports.getFeesListStudent = exports.getFeesList = void 0;
 const fees_1 = __importDefault(require("../models/fees"));
 const user_1 = __importDefault(require("../models/user"));
 async function getFeesList(req, res) {
@@ -12,6 +12,17 @@ async function getFeesList(req, res) {
     res.send(payment);
 }
 exports.getFeesList = getFeesList;
+async function getFeesListStudent(req, res) {
+    try {
+        const params = req.params;
+        const payment = await fees_1.default.find({ student: params.id }).populate('student');
+        res.send(payment);
+    }
+    catch (error) {
+        res.status(500).send(error);
+    }
+}
+exports.getFeesListStudent = getFeesListStudent;
 async function getFeesById(req, res) {
     const params = req.params;
     const fees = await fees_1.default.findById(params.id);

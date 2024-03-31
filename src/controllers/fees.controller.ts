@@ -17,6 +17,19 @@ export async function getFeesList(req:Request, res: Response) {
 
 }
 
+export async function getFeesListStudent(req:Request, res: Response) {
+
+  try {
+    const params = req.params;
+
+  const payment = await Fees.find({student:params.id}).populate('student')
+  res.send(payment)
+  } catch (error) {
+     res.status(500).send(error)
+  }
+
+}
+
 
 export async function getFeesById(req:Request, res: Response) {
 

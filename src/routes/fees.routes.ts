@@ -1,6 +1,6 @@
 import { Application } from "express";
 
-import { getFeesList , getFeesById, createFee,deleteFee,editFee } from "../controllers/fees.controller";
+import { getFeesList , getFeesById, createFee,deleteFee,editFee,getFeesListStudent } from "../controllers/fees.controller";
 // import auth from '../middleware/auth';
 export function FeesRoute(app: Application) {
 
@@ -19,6 +19,9 @@ export function FeesRoute(app: Application) {
      getFeesById
      );
 
+
+     app.get("/fees/student/:id",
+     getFeesListStudent)
 
      /**
     * payments create
