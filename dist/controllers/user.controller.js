@@ -87,7 +87,8 @@ async function createStudent(req, res) {
             _id: parent_auth.id,
             firstname: data.parent.firstname,
             middlename: data.parent.middlename,
-            lastname: data.parent.lastname
+            lastname: data.parent.lastname,
+            email: data.parent.email
         });
         await parent_user.save();
         const auth = new auth_1.default({
@@ -100,6 +101,7 @@ async function createStudent(req, res) {
         await auth.save();
         const user = new user_1.default({
             _id: auth.id,
+            email: data.email,
             firstname: data.firstname,
             middlename: data.middlename,
             lastname: data.lastname,
@@ -110,6 +112,8 @@ async function createStudent(req, res) {
             parent: new mongoose_1.default.Types.ObjectId(parent_auth.id)
         });
         await user.save();
+        parent_user === null || parent_user === void 0 ? void 0 : parent_user.child = new mongoose_1.default.Types.ObjectId(auth.id);
+        await parent_user.save();
         mailer_1.default.sendMail(data.email, 'Portal Account credentials', `To check your fees login to the https://client-weld-eight.vercel.app Your password is ${(0, index_1.formatDate)(data.birthdate)} `);
         mailer_1.default.sendMail(data.parent.email, 'Portal Account credentials', `To check your children fees login to the https://client-weld-eight.vercel.app Your password is ${data.parent.email} `);
         res.send('user created');
@@ -142,12 +146,18 @@ async function getUsersList(_, res) {
 }
 exports.getUsersList = getUsersList;
 async function addStudentParticular(req, res) {
+    var _a, _b;
     const params = req.params;
     const data = req.body;
     const addedFee = new fees_1.default(data);
     addedFee.student = params.id;
     await addedFee.save();
-    res.send('fee added');
+    const fee = await fees_1.default.findById(addedFee.id).populate('student');
+    const student = await user_1.default.findById(params.id).populate("parent");
+    console.log({ fee, student });
+    mailer_1.default.sendMail((_a = fee === null || fee === void 0 ? void 0 : fee.student) === null || _a === void 0 ? void 0 : _a.email, 'New Fee added to your account', `A fee for ${addedFee.particulars} amounting ${addedFee.amount} has been added to your account. To verify login to your account`);
+    mailer_1.default.sendMail((_b = student === null || student === void 0 ? void 0 : student.parent) === null || _b === void 0 ? void 0 : _b.email, 'New Fee added to your childaccount', `A fee for ${addedFee.particulars} amounting ${addedFee.amount} has been added to your account. To verify login to your account`);
+    res.send(fee);
 }
 exports.addStudentParticular = addStudentParticular;
 async function getParentsList(_, res) {

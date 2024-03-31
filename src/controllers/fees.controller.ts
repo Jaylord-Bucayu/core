@@ -1,6 +1,7 @@
 
 import { Request, Response } from "express";
 import Fees from '../models/fees';
+import User from '../models/user'
 
 
 interface IStudentFeeWithTotal {
@@ -43,10 +44,18 @@ export async function getFeesById(req:Request, res: Response) {
 
 export async function getStudentFees(req:Request, res: Response) {
 
+   try {
     const params = req.params;
 
-    const fees = await Fees.find({student:params.id}).populate('student')
+    const parent = await User.findById(params.id);
 
+    const fees = await Fees.find({student:parent?.child}).populate('student')
+    console.log(fees)
+    if(!fees){
+
+    return res.send([])
+
+  }
 
   // Calculate total amount
   const totalAmount: number = fees.reduce((total, fee) => {
@@ -61,6 +70,9 @@ export async function getStudentFees(req:Request, res: Response) {
   }));
 
   res.send(feesWithTotal);
+   } catch (error) {
+      res.status(500).send(error)
+   }
 
 
   }

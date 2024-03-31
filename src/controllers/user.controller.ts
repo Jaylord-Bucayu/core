@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 
 import { Request, Response } from "express";
 import bcrypt from 'bcrypt';
+
 
 //MODELS
 import User from '../models/user';
@@ -134,7 +136,8 @@ export async function createStudent(req:Request, res: Response) {
           _id: parent_auth.id,
           firstname: data.parent.firstname,
           middlename: data.parent.middlename,
-          lastname: data.parent.lastname
+          lastname: data.parent.lastname,
+          email: data.parent.email
       });
 
       await parent_user.save();
@@ -154,6 +157,7 @@ export async function createStudent(req:Request, res: Response) {
 
     const user = new User({
         _id: auth.id,
+        email: data.email,
         firstname: data.firstname,
         middlename: data.middlename,
         lastname: data.lastname,
@@ -166,6 +170,10 @@ export async function createStudent(req:Request, res: Response) {
 
 
     await user.save();
+
+    //@ts-ignore
+    parent_user?.child =  new mongoose.Types.ObjectId(auth.id)
+    await parent_user.save();
 
      Mailer.sendMail(data.email,'Portal Account credentials', `To check your fees login to the https://client-weld-eight.vercel.app Your password is ${formatDate(data.birthdate)} `); // Assuming you have access to student's email
 
@@ -232,7 +240,19 @@ export async function addStudentParticular(req:Request,res:Response) {
 
   await addedFee.save();
 
-  res.send('fee added');
+  const fee = await Fee.findById(addedFee.id).populate('student')
+
+  const student = await User.findById(params.id).populate("parent");
+
+ console.log({fee,student});
+
+  //@ts-expect-error
+  Mailer.sendMail(fee?.student?.email,'New Fee added to your account', `A fee for ${addedFee.particulars} amounting ${addedFee.amount} has been added to your account. To verify login to your account`); // Assuming you have access to student's email
+
+  //@ts-expect-error
+  Mailer.sendMail(student?.parent?.email,'New Fee added to your childaccount', `A fee for ${addedFee.particulars} amounting ${addedFee.amount} has been added to your account. To verify login to your account`); // Assuming you have access to student's email
+
+  res.send(fee);
 
 
 }

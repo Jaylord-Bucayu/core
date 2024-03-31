@@ -75,6 +75,10 @@ const userSchema = new mongoose_1.Schema({
         type: mongoose_1.default.Types.ObjectId,
         ref: 'User'
     },
+    child: {
+        type: mongoose_1.default.Types.ObjectId,
+        ref: 'User'
+    },
 }, { timestamps: true });
 userSchema.index({ sponsors: 1 });
 userSchema.index({ sponsorId: 1 });
