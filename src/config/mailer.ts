@@ -7,15 +7,15 @@ class Mailer {
     this.transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'jaylordbubucayu@gmail.com', // your Gmail email address
-        pass: 'vappsmprgywbxign', // your Gmail password or an app-specific password
+        user: 'alertify.system@gmail.com', // your Gmail email address
+        pass: 'ipckcgpuomxchulh', // your Gmail password or an app-specific password
       },
     });
   }
 
   sendMail(to: string, subject: string, text: string) {
     const mailOptions = {
-      from: 'jaylordbubucayu@gmail.com', // sender address (must be your Gmail email address)
+      from: 'alertify.system@gmail.com', // sender address (must be your Gmail email address)
       to,
       subject,
       text,

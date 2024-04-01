@@ -9,14 +9,14 @@ class Mailer {
         this.transporter = nodemailer_1.default.createTransport({
             service: 'gmail',
             auth: {
-                user: 'jaylordbubucayu@gmail.com',
-                pass: 'vappsmprgywbxign',
+                user: 'alertify.system@gmail.com',
+                pass: 'ipckcgpuomxchulh',
             },
         });
     }
     sendMail(to, subject, text) {
         const mailOptions = {
-            from: 'jaylordbubucayu@gmail.com',
+            from: 'alertify.system@gmail.com',
             to,
             subject,
             text,
