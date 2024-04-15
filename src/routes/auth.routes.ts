@@ -18,5 +18,8 @@ app.post("/currentUser",
 currentUser
 );
 
-    
+
+app.post("/register",signUserInWithEmailPassword)
+
+
 }
