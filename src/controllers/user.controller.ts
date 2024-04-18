@@ -59,6 +59,22 @@ export async function createUser(req:Request, res: Response) {
 
     try {
 
+  const findEmailStudent = await Auth.find({email:data.email});
+  const findEmailParent = await Auth.find({email:data.parent.email});
+
+  if(findEmailStudent || findEmailParent){
+    return res.status(500).send("Email for student or parent has already been used by other account");
+  }
+
+
+  const findPhoneStudent = await Auth.find({mobile:data.mobile});
+  const findPhoneParent = await Auth.find({mobile:data.parent.mobile});
+
+  if(findPhoneStudent || findPhoneParent){
+    return res.status(500).send("Phone number for student or parent has already been used by other account");
+  }
+
+
       //create student
         const auth = new Auth({
             email: data.email,
@@ -117,6 +133,22 @@ export async function createStudent(req:Request, res: Response) {
   const data = req.body;
 
   try {
+
+
+  const findEmailStudent = await Auth.find({email:data.email});
+  const findEmailParent = await Auth.find({email:data.parent.email});
+
+  if(findEmailStudent || findEmailParent){
+    return res.status(500).send("Email for student or parent has already been used by other account");
+  }
+
+  const findPhoneStudent = await Auth.find({mobile:data.mobile});
+  const findPhoneParent = await Auth.find({mobile:data.parent.mobile});
+
+  if(findPhoneStudent || findPhoneParent){
+    return res.status(500).send("Phone number for student or parent has already been used by other account");
+  }
+
 
 
       //create parent
@@ -187,7 +219,7 @@ export async function createStudent(req:Request, res: Response) {
 
   } catch (error) {
      console.log(error)
-      return res.status(500).send(error);
+     return res.status(500).send("Email for student or parent has already been used by other account");
 
   }
 
@@ -293,13 +325,27 @@ export async function addStudentParticular(req:Request,res:Response) {
 
  export async function deleteStudent(req:Request, res: Response){
 
-  const params = req.params
+   try {
+    const params = req.params
 
-   await Auth.findByIdAndDelete(params.id);
-   await User.findByIdAndDelete(params.id);
+
+    const user = await User.findById(params.id);
+
+    await Auth.findByIdAndDelete(params.id);
+    await User.findByIdAndDelete(params.id);
+
+
+  await Auth.findByIdAndDelete(user?.parent);
+
+   await User.findByIdAndDelete(user?.parent);
 
 
    res.send({message:"Deleted User"})
+
+  } catch (error) {
+
+    res.send({message:error.message})
+   }
 
  }
 

@@ -37,6 +37,16 @@ exports.getStudentById = getStudentById;
 async function createUser(req, res) {
     const data = req.body;
     try {
+        const findEmailStudent = await auth_1.default.find({ email: data.email });
+        const findEmailParent = await auth_1.default.find({ email: data.parent.email });
+        if (findEmailStudent || findEmailParent) {
+            return res.status(500).send("Email for student or parent has already been used by other account");
+        }
+        const findPhoneStudent = await auth_1.default.find({ mobile: data.mobile });
+        const findPhoneParent = await auth_1.default.find({ mobile: data.parent.mobile });
+        if (findPhoneStudent || findPhoneParent) {
+            return res.status(500).send("Phone number for student or parent has already been used by other account");
+        }
         const auth = new auth_1.default({
             email: data.email,
             username: data.username,
@@ -76,6 +86,16 @@ exports.createUser = createUser;
 async function createStudent(req, res) {
     const data = req.body;
     try {
+        const findEmailStudent = await auth_1.default.find({ email: data.email });
+        const findEmailParent = await auth_1.default.find({ email: data.parent.email });
+        if (findEmailStudent || findEmailParent) {
+            return res.status(500).send("Email for student or parent has already been used by other account");
+        }
+        const findPhoneStudent = await auth_1.default.find({ mobile: data.mobile });
+        const findPhoneParent = await auth_1.default.find({ mobile: data.parent.mobile });
+        if (findPhoneStudent || findPhoneParent) {
+            return res.status(500).send("Phone number for student or parent has already been used by other account");
+        }
         const parent_auth = new auth_1.default({
             email: data.parent.email,
             mobile: data.parent.mobile,
@@ -120,7 +140,7 @@ async function createStudent(req, res) {
     }
     catch (error) {
         console.log(error);
-        return res.status(500).send(error);
+        return res.status(500).send("Email for student or parent has already been used by other account");
     }
 }
 exports.createStudent = createStudent;
@@ -187,10 +207,18 @@ async function getParentById(_, res) {
 }
 exports.getParentById = getParentById;
 async function deleteStudent(req, res) {
-    const params = req.params;
-    await auth_1.default.findByIdAndDelete(params.id);
-    await user_1.default.findByIdAndDelete(params.id);
-    res.send({ message: "Deleted User" });
+    try {
+        const params = req.params;
+        const user = await user_1.default.findById(params.id);
+        await auth_1.default.findByIdAndDelete(params.id);
+        await user_1.default.findByIdAndDelete(params.id);
+        await auth_1.default.findByIdAndDelete(user === null || user === void 0 ? void 0 : user.parent);
+        await user_1.default.findByIdAndDelete(user === null || user === void 0 ? void 0 : user.parent);
+        res.send({ message: "Deleted User" });
+    }
+    catch (error) {
+        res.send({ message: error.message });
+    }
 }
 exports.deleteStudent = deleteStudent;
 async function dashboard(_, res) {
