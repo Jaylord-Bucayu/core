@@ -63,7 +63,7 @@ export async function createUser(req:Request, res: Response) {
   const findEmailParent = await Auth.find({email:data.parent.email});
 
   if(findEmailStudent || findEmailParent){
-    return res.status(500).send("Email for student or parent has already been used by other account");
+    return res.status(500).send({message:"Email for student or parent has already been used by other account"});
   }
 
 
@@ -71,7 +71,7 @@ export async function createUser(req:Request, res: Response) {
   const findPhoneParent = await Auth.find({mobile:data.parent.mobile});
 
   if(findPhoneStudent || findPhoneParent){
-    return res.status(500).send("Phone number for student or parent has already been used by other account");
+    return res.status(500).send({message:"Phone number for student or parent has already been used by other account"});
   }
 
 
@@ -120,7 +120,7 @@ export async function createUser(req:Request, res: Response) {
 
     } catch (error) {
 
-        return res.send(error);
+        return res.send({message:error.message});
 
     }
 
@@ -139,14 +139,14 @@ export async function createStudent(req:Request, res: Response) {
   const findEmailParent = await Auth.find({email:data.parent.email});
 
   if(findEmailStudent || findEmailParent){
-    return res.status(500).send("Email for student or parent has already been used by other account");
+    return res.status(500).send({message:"Email for student or parent has already been used by other account"});
   }
 
   const findPhoneStudent = await Auth.find({mobile:data.mobile});
   const findPhoneParent = await Auth.find({mobile:data.parent.mobile});
 
   if(findPhoneStudent || findPhoneParent){
-    return res.status(500).send("Phone number for student or parent has already been used by other account");
+    return res.status(500).send({message:"Phone number for student or parent has already been used by other account"});
   }
 
 
@@ -219,7 +219,7 @@ export async function createStudent(req:Request, res: Response) {
 
   } catch (error) {
      console.log(error)
-     return res.status(500).send("Email for student or parent has already been used by other account");
+     return res.status(500).send({message:"Email for student or parent has already been used by other account"});
 
   }
 

@@ -40,12 +40,12 @@ async function createUser(req, res) {
         const findEmailStudent = await auth_1.default.find({ email: data.email });
         const findEmailParent = await auth_1.default.find({ email: data.parent.email });
         if (findEmailStudent || findEmailParent) {
-            return res.status(500).send("Email for student or parent has already been used by other account");
+            return res.status(500).send({ message: "Email for student or parent has already been used by other account" });
         }
         const findPhoneStudent = await auth_1.default.find({ mobile: data.mobile });
         const findPhoneParent = await auth_1.default.find({ mobile: data.parent.mobile });
         if (findPhoneStudent || findPhoneParent) {
-            return res.status(500).send("Phone number for student or parent has already been used by other account");
+            return res.status(500).send({ message: "Phone number for student or parent has already been used by other account" });
         }
         const auth = new auth_1.default({
             email: data.email,
@@ -79,7 +79,7 @@ async function createUser(req, res) {
         res.send('user created');
     }
     catch (error) {
-        return res.send(error);
+        return res.send({ message: error.message });
     }
 }
 exports.createUser = createUser;
@@ -89,12 +89,12 @@ async function createStudent(req, res) {
         const findEmailStudent = await auth_1.default.find({ email: data.email });
         const findEmailParent = await auth_1.default.find({ email: data.parent.email });
         if (findEmailStudent || findEmailParent) {
-            return res.status(500).send("Email for student or parent has already been used by other account");
+            return res.status(500).send({ message: "Email for student or parent has already been used by other account" });
         }
         const findPhoneStudent = await auth_1.default.find({ mobile: data.mobile });
         const findPhoneParent = await auth_1.default.find({ mobile: data.parent.mobile });
         if (findPhoneStudent || findPhoneParent) {
-            return res.status(500).send("Phone number for student or parent has already been used by other account");
+            return res.status(500).send({ message: "Phone number for student or parent has already been used by other account" });
         }
         const parent_auth = new auth_1.default({
             email: data.parent.email,
@@ -140,7 +140,7 @@ async function createStudent(req, res) {
     }
     catch (error) {
         console.log(error);
-        return res.status(500).send("Email for student or parent has already been used by other account");
+        return res.status(500).send({ message: "Email for student or parent has already been used by other account" });
     }
 }
 exports.createStudent = createStudent;
