@@ -138,14 +138,25 @@ export async function createStudent(req:Request, res: Response) {
   const findEmailStudent = await Auth.find({email:data.email});
   const findEmailParent = await Auth.find({email:data.parent.email});
 
-  if(findEmailStudent || findEmailParent){
+
+
+  if(findEmailStudent.length != 0 || findEmailParent.length != 0){
     return res.status(500).send({message:"Email for student or parent has already been used by other account"});
   }
+
+  if(data.email == data.parent.email){
+    return res.status(500).send({message:"Email for student and parent must not be the same"});
+  }
+
+  if(data.mobile == data.parent.mobile){
+    return res.status(500).send({message:"Phone number for student and parent must not be the same"});
+  }
+
 
   const findPhoneStudent = await Auth.find({mobile:data.mobile});
   const findPhoneParent = await Auth.find({mobile:data.parent.mobile});
 
-  if(findPhoneStudent || findPhoneParent){
+  if(findPhoneStudent.length != 0 || findPhoneParent.length != 0){
     return res.status(500).send({message:"Phone number for student or parent has already been used by other account"});
   }
 
