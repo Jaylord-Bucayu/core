@@ -218,12 +218,19 @@ export async function createStudent(req:Request, res: Response) {
     parent_user?.child =  new mongoose.Types.ObjectId(auth.id)
     await parent_user.save();
 
-     Mailer.sendMail(data.email,'Portal Account credentials', `To check your fees login to the https://client-weld-eight.vercel.app Your password is ${formatDate(data.birthdate)} `); // Assuming you have access to student's email
+
+   if(data.email){
+    Mailer.sendMail(data.email,'Portal Account credentials', `To check your fees login to the https://client-weld-eight.vercel.app Your password is ${formatDate(data.birthdate)} `); // Assuming you have access to student's email
+
+   }
+
+   if(data.parent.email){
+    Mailer.sendMail(data.parent.email,'Portal Account credentials', `To check your children fees login to the https://client-weld-eight.vercel.app Your password is ${data.parent.email} `); // Assuming you have access to student's email
+
+   }
 
 
 
-
-      Mailer.sendMail(data.parent.email,'Portal Account credentials', `To check your children fees login to the https://client-weld-eight.vercel.app Your password is ${data.parent.email} `); // Assuming you have access to student's email
 
        res.send('user created')
 
