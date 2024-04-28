@@ -140,8 +140,12 @@ async function createStudent(req, res) {
         await user.save();
         parent_user === null || parent_user === void 0 ? void 0 : parent_user.child = new mongoose_1.default.Types.ObjectId(auth.id);
         await parent_user.save();
-        mailer_1.default.sendMail(data.email, 'Portal Account credentials', `To check your fees login to the https://client-weld-eight.vercel.app Your password is ${(0, index_1.formatDate)(data.birthdate)} `);
-        mailer_1.default.sendMail(data.parent.email, 'Portal Account credentials', `To check your children fees login to the https://client-weld-eight.vercel.app Your password is ${data.parent.email} `);
+        if (data.email) {
+            mailer_1.default.sendMail(data.email, 'Portal Account credentials', `To check your fees login to the https://client-weld-eight.vercel.app Your password is ${(0, index_1.formatDate)(data.birthdate)} `);
+        }
+        if (data.parent.email) {
+            mailer_1.default.sendMail(data.parent.email, 'Portal Account credentials', `To check your children fees login to the https://client-weld-eight.vercel.app Your password is ${data.parent.email} `);
+        }
         res.send('user created');
     }
     catch (error) {

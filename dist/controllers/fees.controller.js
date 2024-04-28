@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.editFee = exports.deleteFee = exports.getStudentFees = exports.createFee = exports.getFeesById = exports.getFeesListStudent = exports.getFeesList = void 0;
 const fees_1 = __importDefault(require("../models/fees"));
 const user_1 = __importDefault(require("../models/user"));
+const mailer_1 = __importDefault(require("src/config/mailer"));
 async function getFeesList(req, res) {
     const data = req.body;
     const payment = await fees_1.default.find(data).populate('student');
@@ -65,9 +66,17 @@ async function deleteFee(req, res) {
 }
 exports.deleteFee = deleteFee;
 async function editFee(req, res) {
+    var _a;
     const params = req.params;
     const body = req.body;
-    const query = await fees_1.default.findByIdAndUpdate(params.id, body);
+    const query = await fees_1.default.findByIdAndUpdate(params.id, body).populate('student');
+    const student = await user_1.default.findById(query === null || query === void 0 ? void 0 : query.id).populate('parent');
+    if (body.status === 'success' && student) {
+        const parentEmail = ((_a = student.parent) === null || _a === void 0 ? void 0 : _a.email) || '';
+        const studentEmail = student.email || '';
+        mailer_1.default.sendMail(parentEmail, 'Portal Account Fee', `The Payment of your children, for ${query === null || query === void 0 ? void 0 : query.particulars} with amounting ${query === null || query === void 0 ? void 0 : query.amount} has been paid`);
+        mailer_1.default.sendMail(studentEmail, 'Portal Account Fee', `The payment for ${query === null || query === void 0 ? void 0 : query.particulars} with amounting ${query === null || query === void 0 ? void 0 : query.amount} has been paid`);
+    }
     res.send(query);
 }
 exports.editFee = editFee;

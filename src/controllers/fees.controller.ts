@@ -2,6 +2,7 @@
 import { Request, Response } from "express";
 import Fees from '../models/fees';
 import User from '../models/user'
+import Mailer from "src/config/mailer";
 
 
 interface IStudentFeeWithTotal {
@@ -102,13 +103,32 @@ export async function getStudentFees(req:Request, res: Response) {
   }
 
 
-  export async function editFee(req:Request, res: Response){
-
+  export async function editFee(req: Request, res: Response) {
     const params = req.params;
     const body = req.body;
 
-    const query = await Fees.findByIdAndUpdate(params.id,body);
+    const query = await Fees.findByIdAndUpdate(params.id, body).populate('student');
+
+    const student = await User.findById(query?.id).populate('parent');
+
+    if (body.status === 'success' && student) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-expect-error
+      const parentEmail = student.parent?.email || ''; // Ensure parent email is not undefined
+      const studentEmail = student.email || ''; // Ensure student email is not undefined
+
+      Mailer.sendMail(
+        parentEmail,
+        'Portal Account Fee',
+        `The Payment of your children, for ${query?.particulars} with amounting ${query?.amount } has been paid`
+      );
+
+      Mailer.sendMail(
+        studentEmail,
+        'Portal Account Fee',
+        `The payment for ${query?.particulars} with amounting ${query?.amount } has been paid`
+      );
+    }
 
     res.send(query);
-
   }
